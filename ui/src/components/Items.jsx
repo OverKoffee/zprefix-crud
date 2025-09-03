@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import ItemCard from "./ItemCard";
 
 export default function Items() {
   const [items, setItems] = useState([]);
@@ -19,13 +20,9 @@ export default function Items() {
 
   return (
     <div>
-      <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            Item: {item.item_name} Description: {item.description}
-          </li>
-        ))}
-      </ul>
+      {items.map((item) => (
+        <ItemCard item={item} />
+      ))}
     </div>
   );
 }

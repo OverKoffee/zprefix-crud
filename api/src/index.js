@@ -62,6 +62,17 @@ app.post("/users", async (req, res) => {
   }
 });
 
+// delete item from items f/ currentUserID
+app.post("/items/delete/:id", async (req, res) => {
+  const { first_name, last_name, username, password } = req.body;
+  try {
+    await knex("users").insert({ first_name, last_name, username, password });
+    res.json(true);
+  } catch (err) {
+    res.status(500).json(`Failed creating account.`);
+  }
+});
+
 app.listen(port, () => {
   console.log(`The server is running on port ${port}.`);
 });
