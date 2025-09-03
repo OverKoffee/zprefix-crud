@@ -32,6 +32,24 @@ app.get("/items", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const userpass = await knex("users")
+      .where("username", username)
+      .andWhere("password", password)
+      .first();
+
+    if (userpass) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
+  } catch (err) {
+    res.status(500).json(`Failed.`);
+  }
+});
+
 app.listen(port, () => {
   console.log(`The server is running on port ${port}.`);
 });
