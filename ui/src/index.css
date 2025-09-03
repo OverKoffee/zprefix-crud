@@ -76,6 +76,14 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.home-button {
+  background-color: #4eab39;
+}
+
+.home-button:hover {
+  background-color: #5ece45;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

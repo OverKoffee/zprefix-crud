@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.status(200).json(`This is the root route!`);
+  res.status(200).json(`Howdy! This is the root route!`);
 });
 
 app.get("/users", async (req, res) => {
@@ -22,6 +22,7 @@ app.get("/users", async (req, res) => {
   }
 });
 
+// get all items
 app.get("/items", async (req, res) => {
   try {
     const items = await knex("items")
@@ -39,6 +40,28 @@ app.get("/items", async (req, res) => {
   } catch (err) {
     console.log(`Error on items fetch.`, err);
     res.status(500).json({ err: `Check express get for /items` });
+  }
+});
+
+// get items for just logged in user
+app.get("/users/:id/items", async (req, res) => {
+  try {
+    const items = await knex("items")
+      .where("items.user_id", req.params.id)
+      .join("users", "items.user_id", "users.id")
+      .select(
+        "items.id",
+        "items.item_name",
+        "items.description",
+        "items.quantity",
+        "items.user_id",
+        "users.first_name",
+        "users.last_name"
+      );
+    res.json(items);
+  } catch (err) {
+    console.log(`Error on items fetch for logged in user.`, err);
+    res.status(500).json({ err: `Check express get for /users/:id/items.` });
   }
 });
 
@@ -105,6 +128,19 @@ app.patch("/items/:id", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json(`Failed on update.`);
+  }
+});
+
+// create/add new item
+app.post("/items", async (req, res) => {
+  const { user_id, item_name, description, quantity } = req.body;
+  try {
+    const [addItem] = await knex("items")
+      .insert({ user_id, item_name, description, quantity })
+      .returning("*");
+    res.json(addItem);
+  } catch (err) {
+    res.status(500).json(`Failed to create new item.`);
   }
 });
 

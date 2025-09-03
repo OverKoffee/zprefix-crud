@@ -19,5 +19,12 @@ exports.seed = async function (knex) {
         "President Donald Trump took aim at Chinese leader Xi Jinping as he hosted foreign leaders at a major military parade in Beijing, a reminder of the lingering tensions between the two sides over trade, tech and other issues.",
       quantity: 10,
     },
+    {
+      user_id: 1,
+      item_name: "Krispy Kreme Donut",
+      description:
+        "A super umptiously diddlyumptious choco glazed donuts that melt in zee mouth.",
+      quantity: 12,
+    },
   ]);
 };

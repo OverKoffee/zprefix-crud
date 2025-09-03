@@ -22,7 +22,7 @@ export default function ItemCard({ item, onDelete }) {
       });
       const data = await res.json();
 
-      data ? setEditMode(false) : alert(`Not allowed or item not found`);
+      data ? setEditMode(false) : alert(`Not allowed. You are not the owner.`);
     } catch (err) {
       console.log(`Error updating item.`, err);
       alert(`Failed to update item.`);
