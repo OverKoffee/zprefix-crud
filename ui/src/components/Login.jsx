@@ -60,7 +60,7 @@ export default function Login() {
       resetLoginPageData();
     } catch (err) {
       console.log(`Failed creating account.`, err);
-      alert(`Failed to create account.`);
+      alert(`Failed creating account.`);
     }
   }
 

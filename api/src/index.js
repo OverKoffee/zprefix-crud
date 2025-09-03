@@ -24,17 +24,28 @@ app.get("/users", async (req, res) => {
 
 app.get("/items", async (req, res) => {
   try {
-    const items = await knex("items").select("*");
+    const items = await knex("items")
+      .join("users", "items.user_id", "users.id")
+      .select(
+        "items.id",
+        "items.item_name",
+        "items.description",
+        "items.quantity",
+        "items.user_id",
+        "users.first_name",
+        "users.last_name"
+      );
     res.json(items);
   } catch (err) {
-    console.log(`Error on user fetch.`, err);
-    res.status(500).json({ err: `Check express get for /users` });
+    console.log(`Error on items fetch.`, err);
+    res.status(500).json({ err: `Check express get for /items` });
   }
 });
 
 // validate existing login creds
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const userpass = await knex("users")
       .where("username", username)
@@ -54,6 +65,7 @@ app.post("/login", async (req, res) => {
 // create new user account
 app.post("/users", async (req, res) => {
   const { first_name, last_name, username, password } = req.body;
+
   try {
     await knex("users").insert({ first_name, last_name, username, password });
     res.json(true);
@@ -65,6 +77,7 @@ app.post("/users", async (req, res) => {
 // delete item from items f/ currentUserID
 app.delete("/items/:id", async (req, res) => {
   const { user_id } = req.body;
+
   try {
     const deleted = await knex("items")
       .where({ id: req.params.id, user_id })
@@ -73,6 +86,25 @@ app.delete("/items/:id", async (req, res) => {
     deleted ? res.json(true) : res.json(false);
   } catch (err) {
     res.status(500).json(`Failed to delete item.`);
+  }
+});
+
+// update item
+app.patch("/items/:id", async (req, res) => {
+  const { user_id, item_name, description, quantity } = req.body;
+
+  try {
+    const patched = await knex("items")
+      .where({ id: req.params.id, user_id })
+      .update({ item_name, description, quantity });
+
+    if (patched) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
+  } catch (err) {
+    res.status(500).json(`Failed on update.`);
   }
 });
 

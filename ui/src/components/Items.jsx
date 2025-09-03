@@ -33,6 +33,7 @@ export default function Items() {
         getItems();
       } else {
         console.log(`Not allowed to delete.`);
+        alert(`Not allowed to delete this item.`);
       }
     } catch (err) {
       console.log(`Failed to delete item.`, err);
@@ -40,10 +41,17 @@ export default function Items() {
   }
 
   return (
-    <div className="items-container">
-      {items.map((item) => (
-        <ItemCard key={item.id} item={item} onDelete={handleDelete} />
-      ))}
-    </div>
+    <>
+      <h2>Item Inventory</h2>
+      <div style={{ marginBottom: "30px" }}>
+        <button style={{ marginRight: "20px" }}>Add Item</button>
+        <button>My Inventory</button>
+      </div>
+      <div className="items-container">
+        {items.map((item) => (
+          <ItemCard key={item.id} item={item} onDelete={handleDelete} />
+        ))}
+      </div>
+    </>
   );
 }

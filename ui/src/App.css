@@ -46,8 +46,8 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 350px;
-  height: 200px;
+  width: 300px;
+  height: 250px;
   border-radius: 10px;
   background-color: burlywood;
   box-shadow: rgba(85, 85, 85, 0.35) 0px 5px 15px;
@@ -61,4 +61,39 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 20px;
+}
+
+.item-field {
+  pointer-events: auto;
+  border: 1px solid black;
+  border-radius: 6px;
+  background: rgba(240, 203, 154, 0.737);
+  font: inherit;
+  color: inherit;
+  padding: 2px 4px;
+}
+
+.item-textarea {
+  background: transparent;
+  border: none;
+  width: 270px;
+  height: 80px;
+  font: inherit;
+  color: inherit;
+  pointer-events: none;
+  resize: none;
+  outline: none;
+  overflow: hidden;
+}
+
+.item-textarea.editable {
+  pointer-events: auto;
+  border: 1px solid black;
+  border-radius: 6px;
+  background: rgba(240, 203, 154, 0.737);
+  font: inherit;
+  color: inherit;
+  padding: 2px 4px;
+  resize: vertical;
+  overflow: auto;
 }
