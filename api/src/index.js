@@ -32,6 +32,7 @@ app.get("/items", async (req, res) => {
   }
 });
 
+// validate existing login creds
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -46,7 +47,18 @@ app.post("/login", async (req, res) => {
       res.json(false);
     }
   } catch (err) {
-    res.status(500).json(`Failed.`);
+    res.status(500).json(`Failed login.`);
+  }
+});
+
+// create new user account
+app.post("/users", async (req, res) => {
+  const { first_name, last_name, username, password } = req.body;
+  try {
+    await knex("users").insert({ first_name, last_name, username, password });
+    res.json(true);
+  } catch (err) {
+    res.status(500).json(`Failed creating account.`);
   }
 });
 

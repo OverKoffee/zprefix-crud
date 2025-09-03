@@ -5,7 +5,11 @@
 exports.up = function (knex) {
   return knex.schema.createTable("items", (table) => {
     table.increments("id").primary();
-    table.integer("user_id").references("id").inTable("users");
+    table
+      .integer("user_id")
+      .references("id")
+      .inTable("users")
+      .onDelete("CASCADE");
     table.string("item_name");
     table.string("description");
     table.integer("quantity");
