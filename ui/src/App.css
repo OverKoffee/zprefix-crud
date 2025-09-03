@@ -40,3 +40,25 @@
 .read-the-docs {
   color: #888;
 }
+
+.item-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 350px;
+  height: 200px;
+  border-radius: 10px;
+  background-color: burlywood;
+  box-shadow: rgba(85, 85, 85, 0.35) 0px 5px 15px;
+  padding: 10px;
+  gap: 8px;
+  text-align: left;
+}
+
+.items-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 20px;
+}

@@ -27,7 +27,7 @@ export default function Login() {
 
       const data = await res.json();
       if (data) {
-        localStorage.setItem("currentUserID", data.id);
+        localStorage.setItem("currentUserID", data);
         navigate("/items");
       } else {
         alert(`Invalid login.`);

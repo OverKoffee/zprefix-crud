@@ -42,7 +42,7 @@ app.post("/login", async (req, res) => {
       .first();
 
     if (userpass) {
-      res.json(true);
+      res.json(userpass.id);
     } else {
       res.json(false);
     }
@@ -63,13 +63,16 @@ app.post("/users", async (req, res) => {
 });
 
 // delete item from items f/ currentUserID
-app.post("/items/delete/:id", async (req, res) => {
-  const { first_name, last_name, username, password } = req.body;
+app.delete("/items/:id", async (req, res) => {
+  const { user_id } = req.body;
   try {
-    await knex("users").insert({ first_name, last_name, username, password });
-    res.json(true);
+    const deleted = await knex("items")
+      .where({ id: req.params.id, user_id })
+      .del();
+
+    deleted ? res.json(true) : res.json(false);
   } catch (err) {
-    res.status(500).json(`Failed creating account.`);
+    res.status(500).json(`Failed to delete item.`);
   }
 });
 

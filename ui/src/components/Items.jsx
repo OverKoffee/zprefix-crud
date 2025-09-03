@@ -18,10 +18,31 @@ export default function Items() {
     getItems();
   }, []);
 
+  async function handleDelete(id) {
+    const user_id = localStorage.getItem("currentUserID");
+
+    try {
+      const res = await fetch(`http://localhost:5000/items/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id }),
+      });
+
+      const data = await res.json();
+      if (data) {
+        getItems();
+      } else {
+        console.log(`Not allowed to delete.`);
+      }
+    } catch (err) {
+      console.log(`Failed to delete item.`, err);
+    }
+  }
+
   return (
-    <div>
+    <div className="items-container">
       {items.map((item) => (
-        <ItemCard item={item} />
+        <ItemCard key={item.id} item={item} onDelete={handleDelete} />
       ))}
     </div>
   );
