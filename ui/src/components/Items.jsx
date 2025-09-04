@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import ItemCard from "./ItemCard";
-import NewItemCard from "./NewItemCard";
 import NavHeader from "./NavHeader";
 
 export default function Items() {
   const [items, setItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [modalTask, setModalTask] = useState(null);
+
   const currentUserID = localStorage.getItem("currentUserID");
   const guestUser = localStorage.getItem("guest") === "true";
 
   const [view, setView] = useState(guestUser ? "allInventory" : "myInventory");
-  const [addingItem, setAddingItem] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   async function getAllItems() {
     try {
@@ -57,11 +57,33 @@ export default function Items() {
       if (data) {
         refreshViewTracker();
       } else {
-        console.log(`Not allowed to delete.`);
         alert(`Not allowed to delete this item.`);
       }
     } catch (err) {
       console.log(`Failed to delete item.`, err);
+    }
+  }
+
+  async function handleModalSave() {
+    try {
+      if (modalTask === "add") {
+        await fetch(`http://localhost:5000/items`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...selectedItem, user_id: currentUserID }),
+        });
+      } else if (modalTask === "edit") {
+        await fetch(`http://localhost:5000/items/${selectedItem.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...selectedItem, user_id: currentUserID }),
+        });
+      }
+      setSelectedItem(null);
+      setModalTask(null);
+      refreshViewTracker();
+    } catch (err) {
+      console.log("Modal save failed.", err);
     }
   }
 
@@ -75,10 +97,18 @@ export default function Items() {
           <>
             <button
               style={{ marginRight: "20px" }}
-              onClick={() => setAddingItem(true)}
+              onClick={() => {
+                setSelectedItem({
+                  item_name: "",
+                  description: "",
+                  quantity: 1,
+                });
+                setModalTask("add");
+              }}
             >
               Add Item
             </button>
+
             <button
               onClick={() => setView("myInventory")}
               style={{ marginRight: "20px" }}
@@ -92,23 +122,16 @@ export default function Items() {
       </div>
 
       <div className="items-container">
-        {addingItem && (
-          <NewItemCard
-            onAdd={() => {
-              getAllItems();
-              setAddingItem(false);
-            }}
-            onCancel={() => setAddingItem(false)}
-          />
-        )}
-
         {items.map((item) => (
           <ItemCard
             key={item.id}
             item={item}
             onDelete={handleDelete}
             guestUser={guestUser}
-            onClick={() => setSelectedItem(item)}
+            onClick={() => {
+              setSelectedItem(item);
+              setModalTask("view");
+            }}
           />
         ))}
       </div>
@@ -118,22 +141,95 @@ export default function Items() {
           className="modal-fullview-overlay"
           onClick={() => setSelectedItem(null)}
         >
-          <div
-            className="modal-card"
-            onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
-          >
-            <h2>{selectedItem.item_name}</h2>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <h2>{selectedItem.item_name || "New Item"}</h2>
+
+            {/* Item Name */}
             <div>
-              <strong>Added By:</strong> {selectedItem.first_name}
+              <strong>Item: </strong>
+              {modalTask === "view" ? (
+                selectedItem.item_name
+              ) : (
+                <input
+                  type="text"
+                  className="item-field"
+                  value={selectedItem.item_name}
+                  onChange={(e) =>
+                    setSelectedItem({
+                      ...selectedItem,
+                      item_name: e.target.value,
+                    })
+                  }
+                />
+              )}
+            </div>
+
+            {/* Added By */}
+            <div>
+              <strong>Added By: </strong> {selectedItem.first_name}{" "}
               {selectedItem.last_name}
             </div>
+
+            {/* Quantity */}
             <div>
-              <strong>Quantity:</strong> {selectedItem.quantity}
+              <strong>Quantity: </strong>
+              {modalTask === "view" ? (
+                selectedItem.quantity
+              ) : (
+                <input
+                  type="number"
+                  className="item-field"
+                  value={selectedItem.quantity}
+                  onChange={(e) =>
+                    setSelectedItem({
+                      ...selectedItem,
+                      quantity: e.target.value,
+                    })
+                  }
+                />
+              )}
             </div>
+
+            {/* Description */}
             <div>
-              <strong>Description:</strong> {selectedItem.description}
+              <strong>Description: </strong>
+              {modalTask === "view" ? (
+                selectedItem.description
+              ) : (
+                <textarea
+                  className="item-field"
+                  value={selectedItem.description}
+                  onChange={(e) =>
+                    setSelectedItem({
+                      ...selectedItem,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              )}
             </div>
-            <button onClick={() => setSelectedItem(null)}>Close</button>
+
+            <div style={{ alignSelf: "center" }}>
+              {!guestUser && modalTask === "view" && (
+                <button
+                  onClick={() => setModalTask("edit")}
+                  style={{ marginRight: "30px" }}
+                >
+                  Edit
+                </button>
+              )}
+
+              {modalTask !== "view" && (
+                <button
+                  onClick={handleModalSave}
+                  style={{ marginRight: "30px" }}
+                >
+                  Save
+                </button>
+              )}
+
+              <button onClick={() => setSelectedItem(null)}>Close</button>
+            </div>
           </div>
         </div>
       )}
