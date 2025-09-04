@@ -11,7 +11,7 @@ exports.up = function (knex) {
       .inTable("users")
       .onDelete("CASCADE");
     table.string("item_name");
-    table.string("description");
+    table.text("description");
     table.integer("quantity");
   });
 };

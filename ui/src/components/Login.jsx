@@ -28,6 +28,9 @@ export default function Login() {
       const data = await res.json();
       if (data) {
         localStorage.setItem("currentUserID", data);
+        localStorage.setItem("currentUsername", username);
+        localStorage.removeItem("guest");
+        resetLoginPage();
         navigate("/items");
       } else {
         alert(`Invalid login.`);
@@ -52,7 +55,9 @@ export default function Login() {
 
       const data = await res.json();
       if (data) {
-        alert(`Account ${username} was created successfully.`);
+        alert(
+          `Account ${username} was created successfully. You can log in now.`
+        );
       } else {
         alert(`Couldn't create account.`);
       }
@@ -70,6 +75,7 @@ export default function Login() {
 
   function handleGuestLoginClick() {
     localStorage.setItem("currentUserID", "guest");
+    localStorage.setItem("currentUserName", "Guest (Matt/Jeff)");
     localStorage.setItem("guest", "true");
     navigate("/items");
   }

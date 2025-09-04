@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ItemCard({ item, onDelete, guestUser }) {
+export default function ItemCard({ item, onDelete, guestUser, onClick }) {
   const [itemName, setItemName] = useState(item.item_name || "");
   const [description, setDescription] = useState(item.description || "");
   const [quantity, setQuantity] = useState(item.quantity || 1);
@@ -42,7 +42,7 @@ export default function ItemCard({ item, onDelete, guestUser }) {
 
   return (
     <>
-      <div className="item-card">
+      <div className="item-card" onClick={onClick}>
         <div>
           {!guestUser && (
             <>

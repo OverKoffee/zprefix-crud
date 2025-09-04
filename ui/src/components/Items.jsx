@@ -10,6 +10,7 @@ export default function Items() {
 
   const [view, setView] = useState(guestUser ? "allInventory" : "myInventory");
   const [addingItem, setAddingItem] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   async function getAllItems() {
     try {
@@ -107,9 +108,35 @@ export default function Items() {
             item={item}
             onDelete={handleDelete}
             guestUser={guestUser}
+            onClick={() => setSelectedItem(item)}
           />
         ))}
       </div>
+
+      {selectedItem && (
+        <div
+          className="modal-fullview-overlay"
+          onClick={() => setSelectedItem(null)}
+        >
+          <div
+            className="modal-card"
+            onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+          >
+            <h2>{selectedItem.item_name}</h2>
+            <div>
+              <strong>Added By:</strong> {selectedItem.first_name}
+              {selectedItem.last_name}
+            </div>
+            <div>
+              <strong>Quantity:</strong> {selectedItem.quantity}
+            </div>
+            <div>
+              <strong>Description:</strong> {selectedItem.description}
+            </div>
+            <button onClick={() => setSelectedItem(null)}>Close</button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
