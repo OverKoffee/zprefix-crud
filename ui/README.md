@@ -1,12 +1,44 @@
-# React + Vite
+# Z-prefix Solo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a basic CRUD app demonstrating a plaintext user and guest login. The app allows the user to perform all CRUD operations against an item inventory database. The app also allows guests to view the inventory but cannot perform CRUD operations.
 
-Currently, two official plugins are available:
+## How-to
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Run API (http://localhost:5000)
 
-## Expanding the ESLint configuration
+    cd api
+    npm install
+    npm run dev
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Run UI (http://localhost:8080)
+
+    cd ui
+    npm install
+    npm run dev
+
+### Create Postgres database
+
+    createdb -U postgres zprefix
+
+### Run migrations
+
+    npx knex migrate:latest
+
+### Run seeds
+
+    npx knex seed:run
+
+### Notes:
+
+# If needed, rollback migrations
+
+        cd api
+        npx knex migrate:rollback --all
+
+## Default User Logins (from seeds)
+
+    username: bross
+    password: painting
+
+    username: ozzy
+    password: rocks
