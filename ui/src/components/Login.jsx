@@ -75,7 +75,7 @@ export default function Login() {
 
   function handleGuestLoginClick() {
     localStorage.setItem("currentUserID", "guest");
-    localStorage.setItem("currentUserName", "Guest (Matt/Jeff)");
+    localStorage.setItem("currentUsername", "Guest (Matt/Jeff)");
     localStorage.setItem("guest", "true");
     navigate("/items");
   }

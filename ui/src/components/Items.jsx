@@ -64,7 +64,7 @@ export default function Items() {
     }
   }
 
-  async function handleModalSave() {
+  async function handleModalSaveClick() {
     try {
       if (modalTask === "add") {
         await fetch(`http://localhost:5000/items`, {
@@ -144,7 +144,6 @@ export default function Items() {
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <h2>{selectedItem.item_name || "New Item"}</h2>
 
-            {/* Item Name */}
             <div>
               <strong>Item: </strong>
               {modalTask === "view" ? (
@@ -164,13 +163,13 @@ export default function Items() {
               )}
             </div>
 
-            {/* Added By */}
-            <div>
-              <strong>Added By: </strong> {selectedItem.first_name}{" "}
-              {selectedItem.last_name}
-            </div>
+            {selectedItem.first_name && (
+              <div>
+                <strong>Added By: </strong> {selectedItem.first_name}{" "}
+                {selectedItem.last_name}
+              </div>
+            )}
 
-            {/* Quantity */}
             <div>
               <strong>Quantity: </strong>
               {modalTask === "view" ? (
@@ -190,7 +189,6 @@ export default function Items() {
               )}
             </div>
 
-            {/* Description */}
             <div>
               <strong>Description: </strong>
               {modalTask === "view" ? (
@@ -210,18 +208,20 @@ export default function Items() {
             </div>
 
             <div style={{ alignSelf: "center" }}>
-              {!guestUser && modalTask === "view" && (
-                <button
-                  onClick={() => setModalTask("edit")}
-                  style={{ marginRight: "30px" }}
-                >
-                  Edit
-                </button>
-              )}
+              {!guestUser &&
+                modalTask === "view" &&
+                selectedItem.user_id == currentUserID && (
+                  <button
+                    onClick={() => setModalTask("edit")}
+                    style={{ marginRight: "30px" }}
+                  >
+                    Edit
+                  </button>
+                )}
 
               {modalTask !== "view" && (
                 <button
-                  onClick={handleModalSave}
+                  onClick={handleModalSaveClick}
                   style={{ marginRight: "30px" }}
                 >
                   Save
