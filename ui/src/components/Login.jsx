@@ -6,11 +6,11 @@ export default function Login() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [password, setPassword] = useState("");
-  const [buttonToggle, setButtonToggle] = useState(false);
+  const [creatingAccToggle, setCreatingAccToggle] = useState(false);
   const navigate = useNavigate();
 
-  function resetLoginPageData() {
-    setButtonToggle(false);
+  function resetLoginPage() {
+    setCreatingAccToggle(false);
     setFirstname("");
     setLastname("");
     setUsername("");
@@ -57,7 +57,7 @@ export default function Login() {
         alert(`Couldn't create account.`);
       }
 
-      resetLoginPageData();
+      resetLoginPage();
     } catch (err) {
       console.log(`Failed creating account.`, err);
       alert(`Failed creating account.`);
@@ -65,14 +65,20 @@ export default function Login() {
   }
 
   function handleNewUserClick() {
-    setButtonToggle(true);
+    setCreatingAccToggle(true);
+  }
+
+  function handleGuestLoginClick() {
+    localStorage.setItem("currentUserID", "guest");
+    localStorage.setItem("guest", "true");
+    navigate("/items");
   }
 
   return (
     <div>
-      <h1>{buttonToggle ? "Create New Account" : "Login"}</h1>
+      <h1>{creatingAccToggle ? "Create New Account" : "Login"}</h1>
 
-      {buttonToggle && (
+      {creatingAccToggle && (
         <div>
           <input
             type="text"
@@ -118,20 +124,27 @@ export default function Login() {
       <br />
       <br />
 
-      {!buttonToggle && (
-        <button onClick={() => handleLoginClick()}>Login</button>
+      {!creatingAccToggle && (
+        <>
+          <button
+            onClick={() => handleLoginClick()}
+            style={{ marginRight: "20px" }}
+          >
+            Login
+          </button>
+          <button onClick={() => handleGuestLoginClick()}>
+            Login as Guest
+          </button>
+          <br />
+          <br />
+          <button onClick={() => handleNewUserClick()}>New User</button>
+        </>
       )}
-      {buttonToggle && (
+
+      {creatingAccToggle && (
         <button onClick={() => handleCreateAccountClick()}>
           Create Account
         </button>
-      )}
-
-      <br />
-      <br />
-
-      {!buttonToggle && (
-        <button onClick={() => handleNewUserClick()}>New User</button>
       )}
     </div>
   );

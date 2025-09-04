@@ -24,8 +24,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -82,6 +80,11 @@ button:focus-visible {
 
 .home-button:hover {
   background-color: #5ece45;
+}
+
+.delete-button:hover {
+  background-color: #f47373e6;
+  color: black;
 }
 
 @media (prefers-color-scheme: light) {

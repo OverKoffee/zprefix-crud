@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ItemCard({ item, onDelete }) {
+export default function ItemCard({ item, onDelete, guestUser }) {
   const [itemName, setItemName] = useState(item.item_name || "");
   const [description, setDescription] = useState(item.description || "");
   const [quantity, setQuantity] = useState(item.quantity || 1);
@@ -44,27 +44,34 @@ export default function ItemCard({ item, onDelete }) {
     <>
       <div className="item-card">
         <div>
-          <button
-            className="item-button"
-            style={{ marginRight: "15px" }}
-            onClick={() => handleEditClick()}
-          >
-            {!editMode ? "Edit Item" : "Submit Update"}
-          </button>
+          {!guestUser && (
+            <>
+              <button
+                className="item-button"
+                style={{ marginRight: "15px" }}
+                onClick={() => handleEditClick()}
+              >
+                {!editMode ? "Edit Item" : "Submit Update"}
+              </button>
 
-          {editMode && (
-            <button
-              className="item-button"
-              style={{ marginRight: "15px" }}
-              onClick={() => handleCancelClick()}
-            >
-              Cancel
-            </button>
+              {editMode && (
+                <button
+                  className="item-button"
+                  style={{ marginRight: "15px" }}
+                  onClick={() => handleCancelClick()}
+                >
+                  Cancel
+                </button>
+              )}
+
+              <button
+                className="item-button delete-button"
+                onClick={() => onDelete(item.id)}
+              >
+                Delete
+              </button>
+            </>
           )}
-
-          <button className="item-button" onClick={() => onDelete(item.id)}>
-            Delete
-          </button>
         </div>
 
         <div>

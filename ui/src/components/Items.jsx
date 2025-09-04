@@ -5,19 +5,11 @@ import NavHeader from "./NavHeader";
 
 export default function Items() {
   const [items, setItems] = useState([]);
-  const [addingItem, setAddingItem] = useState(false);
-
   const currentUserID = localStorage.getItem("currentUserID");
+  const guestUser = localStorage.getItem("guest") === "true";
 
-  const getItems = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/items`);
-      const data = await res.json();
-      setItems(data);
-    } catch (err) {
-      console.log(`getItems failed.`, err);
-    }
-  };
+  const [view, setView] = useState(guestUser ? "allInventory" : "myInventory");
+  const [addingItem, setAddingItem] = useState(false);
 
   async function getAllItems() {
     try {
@@ -41,9 +33,14 @@ export default function Items() {
     }
   }
 
+  // stay on 'My Inventory' or 'All Inventory' when delete/edit
+  function refreshViewTracker() {
+    view === "myInventory" ? getLoggedInUserItems() : getAllItems();
+  }
+
   useEffect(() => {
-    getAllItems();
-  }, []);
+    refreshViewTracker();
+  }, [view]);
 
   async function handleDelete(id) {
     const user_id = localStorage.getItem("currentUserID");
@@ -57,7 +54,7 @@ export default function Items() {
 
       const data = await res.json();
       if (data) {
-        getAllItems();
+        refreshViewTracker();
       } else {
         console.log(`Not allowed to delete.`);
         alert(`Not allowed to delete this item.`);
@@ -70,21 +67,27 @@ export default function Items() {
   return (
     <>
       <NavHeader />
+
       <h2>Item Inventory</h2>
       <div style={{ marginBottom: "30px" }}>
-        <button
-          style={{ marginRight: "20px" }}
-          onClick={() => setAddingItem(true)}
-        >
-          Add Item
-        </button>
-        <button
-          onClick={() => getLoggedInUserItems()}
-          style={{ marginRight: "20px" }}
-        >
-          My Inventory
-        </button>
-        <button onClick={() => getAllItems()}>All Inventory</button>
+        {!guestUser && (
+          <>
+            <button
+              style={{ marginRight: "20px" }}
+              onClick={() => setAddingItem(true)}
+            >
+              Add Item
+            </button>
+            <button
+              onClick={() => setView("myInventory")}
+              style={{ marginRight: "20px" }}
+            >
+              My Inventory
+            </button>
+          </>
+        )}
+
+        <button onClick={() => setView("allInventory")}>All Inventory</button>
       </div>
 
       <div className="items-container">
@@ -99,7 +102,12 @@ export default function Items() {
         )}
 
         {items.map((item) => (
-          <ItemCard key={item.id} item={item} onDelete={handleDelete} />
+          <ItemCard
+            key={item.id}
+            item={item}
+            onDelete={handleDelete}
+            guestUser={guestUser}
+          />
         ))}
       </div>
     </>
