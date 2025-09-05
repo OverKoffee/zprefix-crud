@@ -85,6 +85,18 @@
   padding: 2px 4px;
 }
 
+.item-field-desc {
+  pointer-events: auto;
+  border: 1px solid black;
+  border-radius: 6px;
+  background: rgba(240, 203, 154, 0.737);
+  width: 350px;
+  height: 90px;
+  font: inherit;
+  color: inherit;
+  padding: 2px 4px;
+}
+
 .item-textarea {
   background: transparent;
   border: none;

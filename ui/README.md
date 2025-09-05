@@ -30,6 +30,8 @@ This is a basic CRUD app demonstrating a plaintext user and guest login. The app
 
 ### Notes:
 
+# Run 'npm run dev' from /api and /ui respectively
+
 # If needed, rollback migrations
 
         cd api

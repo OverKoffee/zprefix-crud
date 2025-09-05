@@ -195,7 +195,7 @@ export default function Items() {
                 selectedItem.description
               ) : (
                 <textarea
-                  className="item-field"
+                  className="item-field-desc"
                   value={selectedItem.description}
                   onChange={(e) =>
                     setSelectedItem({
